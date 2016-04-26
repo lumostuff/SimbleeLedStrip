@@ -5,7 +5,7 @@
 #define CLOCK_PIN   4
 #define LED_TYPE    APA102
 #define COLOR_ORDER GBR
-#define NUM_LEDS    15
+#define NUM_LEDS    14
 
 FASTLED_USING_NAMESPACE
 
@@ -33,7 +33,7 @@ uint8_t currentPatternIndex = 0;
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 uint8_t patternCount = ARRAY_SIZE(patterns);
 
-uint8_t gHue = 0; // rotating "base color" used by many of the patterns
+uint8_t hue = 0; // rotating "base color" used by many of the patterns
 
 // pattern screen controls
 uint8_t ui_buttonOff;
@@ -77,6 +77,10 @@ void loop() {
   patterns[currentPatternIndex]();
 
   FastLED.show();
+
+  EVERY_N_MILLIS(30) {
+    hue++;
+  }
 }
 
 void showSolidColor() {
@@ -89,7 +93,7 @@ void off() {
 
 void rainbow() {
   // FastLED's built-in rainbow generator
-  fill_rainbow( leds, NUM_LEDS, gHue, 7);
+  fill_rainbow( leds, NUM_LEDS, hue, 7);
 }
 
 void rainbowWithGlitter() {
@@ -108,14 +112,14 @@ void confetti() {
   // random colored speckles that blink in and fade smoothly
   fadeToBlackBy( leds, NUM_LEDS, 10);
   int pos = random16(NUM_LEDS);
-  leds[pos] += CHSV( gHue + random8(64), 200, 255);
+  leds[pos] += CHSV( hue + random8(64), 200, 255);
 }
 
 void sinelon() {
   // a colored dot sweeping back and forth, with fading trails
   fadeToBlackBy( leds, NUM_LEDS, 20);
   int pos = beatsin16(13, 0, NUM_LEDS);
-  leds[pos] += CHSV( gHue, 255, 192);
+  leds[pos] += CHSV( hue, 255, 192);
 }
 
 void bpm() {
@@ -124,7 +128,7 @@ void bpm() {
   CRGBPalette16 palette = PartyColors_p;
   uint8_t beat = beatsin8( BeatsPerMinute, 64, 255);
   for ( int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = ColorFromPalette(palette, gHue + (i * 2), beat - gHue + (i * 10));
+    leds[i] = ColorFromPalette(palette, hue + (i * 2), beat - hue + (i * 10));
   }
 }
 
