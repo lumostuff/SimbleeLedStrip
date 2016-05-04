@@ -63,12 +63,6 @@ uint8_t ui_sliderBrightness;
 
 // color screen controls
 uint8_t ui_buttonPattern;
-uint8_t ui_textfieldRed;
-uint8_t ui_sliderRed;
-uint8_t ui_textfieldGreen;
-uint8_t ui_sliderGreen;
-uint8_t ui_textfieldBlue;
-uint8_t ui_sliderBlue;
 uint8_t ui_rectSwatch;
 uint8_t ui_imageColorWheel;
 
@@ -236,59 +230,75 @@ void patternSelectorScreen() {
 
   SimbleeForMobile.drawText(85, 30, "Choose a pattern....", BLUE);
 
-  uint16_t y = 40;
+  uint16_t margin = 10;
+  uint16_t height = 40;
+  uint16_t y = 70;
+  uint16_t width = SimbleeForMobile.screenWidth / 2;
+  width -= margin * 1.5;
 
-  ui_buttonOff                = SimbleeForMobile.drawButton(20, y += 40, 280, "Off");
-  ui_buttonColor              = SimbleeForMobile.drawButton(20, y += 40, 280, "Color");
-  ui_buttonColorWaves         = SimbleeForMobile.drawButton(20, y += 40, 280, "ColorWaves");
-  ui_buttonRainbow            = SimbleeForMobile.drawButton(20, y += 40, 280, "Rainbow");
-  ui_buttonRainbowWithGlitter = SimbleeForMobile.drawButton(20, y += 40, 280, "Rainbow with Glitter");
-  ui_buttonConfetti           = SimbleeForMobile.drawButton(20, y += 40, 280, "Confetti");
-  ui_buttonSinelon            = SimbleeForMobile.drawButton(20, y += 40, 280, "Sinelon");
-  ui_buttonJuggle             = SimbleeForMobile.drawButton(20, y += 40, 280, "Juggle");
-  ui_buttonBeat               = SimbleeForMobile.drawButton(20, y += 40, 280, "Beat");
+  ui_buttonOff                = SimbleeForMobile.drawButton(margin, y, width, "Off");
+  ui_buttonColor              = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Color");
 
-  ui_sliderBrightness = SimbleeForMobile.drawSlider(20, y += 40, 280, 0, 255);
+  y += height;
+  ui_buttonColorWaves         = SimbleeForMobile.drawButton(margin, y, width, "ColorWaves");
+  ui_buttonRainbow            = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Rainbow");
+
+  y += height;
+  ui_buttonRainbowWithGlitter = SimbleeForMobile.drawButton(margin, y, width, "Rainbow w Glitter");
+  ui_buttonConfetti           = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Confetti");
+
+  y += height;
+  ui_buttonSinelon            = SimbleeForMobile.drawButton(margin, y, width, "Sinelon");
+  ui_buttonJuggle             = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Juggle");
+
+  y += height;
+  ui_buttonBeat               = SimbleeForMobile.drawButton(margin, y, width, "Beat");
+  SimbleeForMobile.drawButton(margin * 2 + width, y, width, "");
+
+  y += height;
+  SimbleeForMobile.drawButton(margin, y, width, "");
+  SimbleeForMobile.drawButton(margin * 2 + width, y, width, "");
+
+  y += height;
+  SimbleeForMobile.drawButton(margin, y, width, "");
+  SimbleeForMobile.drawButton(margin * 2 + width, y, width, "");
+
+  y += height;
+  SimbleeForMobile.drawButton(margin, y, width, "");
+  SimbleeForMobile.drawButton(margin * 2 + width, y, width, "");
+
+  y += height;
+  SimbleeForMobile.drawText(margin, y, "Brightness:", BLUE);
+
+  y += height / 2;
+  width = SimbleeForMobile.screenWidth - margin * 2;
+  ui_sliderBrightness = SimbleeForMobile.drawSlider(margin, y, width, 0, 255);
   SimbleeForMobile.updateValue(ui_sliderBrightness, brightness);
-
-  // we need a momentary button (the default is a push button)
-  //  SimbleeForMobile.setEvents(ui_button1, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button2, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button3, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button4, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button5, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button6, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button7, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_button8, EVENT_PRESS | EVENT_RELEASE);
-  //  SimbleeForMobile.setEvents(ui_slider, EVENT_DRAG | EVENT_POSITION | EVENT_PRESS | EVENT_RELEASE);
 
   SimbleeForMobile.endScreen();
 }
 
 void colorSelectorScreen() {
-  color_t darkgray = rgb(85, 85, 85);
-
-  SimbleeForMobile.beginScreen(darkgray);
+  SimbleeForMobile.beginScreen(WHITE);
 
   // put the controls at the top, so the keyboard doesn't cover them up
 
-  SimbleeForMobile.drawText(25, 71, "R:", WHITE);
-  ui_sliderRed = SimbleeForMobile.drawSlider(55, 65, 175, 0, 255);
-  ui_textfieldRed = SimbleeForMobile.drawTextField(245, 65, 50, 255, "", WHITE, darkgray);
+  uint16_t margin = 10;
+  uint16_t height = 40;
+  uint16_t y = 70;
+  uint16_t width = SimbleeForMobile.screenWidth / 2;
+  width -= margin * 1.5;
 
-  SimbleeForMobile.drawText(25, 116, "G:", WHITE);
-  ui_sliderGreen = SimbleeForMobile.drawSlider(55, 110, 175, 0, 255);
-  ui_textfieldGreen = SimbleeForMobile.drawTextField(245, 110, 50, 255, "", WHITE, darkgray);
+  ui_buttonPattern = SimbleeForMobile.drawButton(10, y, width, "Back");
 
-  SimbleeForMobile.drawText(25, 161, "B:", WHITE);
-  ui_sliderBlue = SimbleeForMobile.drawSlider(55, 155, 175, 0, 255);
-  ui_textfieldBlue = SimbleeForMobile.drawTextField(245, 155, 50, 255, "", WHITE, darkgray);
-
+  width = SimbleeForMobile.screenWidth;
+  width -= margin * 2;
+  
   // border
-  SimbleeForMobile.drawRect(25, 200, 270, 40, WHITE);
-  ui_rectSwatch = SimbleeForMobile.drawRect(26, 201, 268, 38, WHITE);
+  SimbleeForMobile.drawRect(margin, 120, width, height, BLACK);
+  ui_rectSwatch = SimbleeForMobile.drawRect(margin + 1, 121, width - 2, height - 2, WHITE);
 
-  ui_imageColorWheel = SimbleeForMobile.drawImage(COLOR_WHEEL, 10, 250);
+  ui_imageColorWheel = SimbleeForMobile.drawImage(COLOR_WHEEL, margin, 170);
 
   SimbleeForMobile.setEvents(ui_imageColorWheel, EVENT_COLOR);
 
@@ -305,77 +315,62 @@ void ui() {
 }
 
 void ui_event(event_t &event) {
-  if (event.id == ui_buttonColor) {
-    currentPatternIndex = patternCount - 2; // off is always the second to last 'pattern'
-    SimbleeForMobile.showScreen(2);
-  }
-  else if (event.id == ui_buttonPattern) {
-    SimbleeForMobile.showScreen(1);
-  }
-  else if (event.id == ui_buttonOff) {
-    currentPatternIndex = patternCount - 1; // off is always the last 'pattern'
-  }
-  else if (event.id == ui_sliderBrightness) {
-    brightness = event.value;
-    FastLED.setBrightness(brightness);
-  }
-  else if (event.id == ui_buttonColorWaves) {
-    currentPatternIndex = 0;
-  }
-  else if (event.id == ui_buttonRainbow) {
-    currentPatternIndex = 1;
-  }
-  else if (event.id == ui_buttonRainbowWithGlitter) {
-    currentPatternIndex = 2;
-  }
-  else if (event.id == ui_buttonConfetti) {
-    currentPatternIndex = 3;
-  }
-  else if (event.id == ui_buttonSinelon) {
-    currentPatternIndex = 4;
-  }
-  else if (event.id == ui_buttonJuggle) {
-    currentPatternIndex = 5;
-  }
-  else if (event.id == ui_buttonBeat) {
-    currentPatternIndex = 6;
-  }
-  else if (event.id == ui_imageColorWheel) {
-    solidColor.r = event.red;
-    solidColor.g = event.green;
-    solidColor.b = event.blue;
-    SimbleeForMobile.updateValue(ui_sliderRed, solidColor.r);
-    SimbleeForMobile.updateValue(ui_textfieldRed, solidColor.r);
-    SimbleeForMobile.updateValue(ui_sliderGreen, solidColor.g);
-    SimbleeForMobile.updateValue(ui_textfieldGreen, solidColor.g);
-    SimbleeForMobile.updateValue(ui_sliderBlue, solidColor.b);
-    SimbleeForMobile.updateValue(ui_textfieldBlue, solidColor.b);
-  }
-  else if (event.id == ui_sliderRed) {
-    solidColor.r = event.value;
-    SimbleeForMobile.updateValue(ui_textfieldRed, solidColor.r);
-  }
-  else if (event.id == ui_textfieldRed) {
-    solidColor.r = event.value;
-    SimbleeForMobile.updateValue(ui_sliderRed, solidColor.r);
-  }
-  else if (event.id == ui_sliderGreen) {
-    solidColor.g = event.value;
-    SimbleeForMobile.updateValue(ui_textfieldGreen, solidColor.g);
-  }
-  else if (event.id == ui_textfieldGreen) {
-    solidColor.g = event.value;
-    SimbleeForMobile.updateValue(ui_sliderGreen, solidColor.g);
-  }
-  else if (event.id == ui_sliderBlue) {
-    solidColor.b = event.value;
-    SimbleeForMobile.updateValue(ui_textfieldBlue, solidColor.b);
-  }
-  else if (event.id == ui_textfieldBlue) {
-    solidColor.b = event.value;
-    SimbleeForMobile.updateValue(ui_sliderBlue, solidColor.b);
-  }
+  Serial.print("screen: ");
+  Serial.println(SimbleeForMobile.screen);
+  Serial.print("event.id: ");
+  Serial.println(event.id);
 
-  SimbleeForMobile.updateColor(ui_rectSwatch, rgb(solidColor.r, solidColor.g, solidColor.b));
+  if (SimbleeForMobile.screen == 1) {
+    if (event.id == ui_buttonColor) {
+      currentPatternIndex = patternCount - 2; // solid color is always the second to last 'pattern'
+      SimbleeForMobile.showScreen(2);
+    }
+    else if (event.id == ui_buttonOff) {
+      currentPatternIndex = patternCount - 1; // off is always the last 'pattern'
+    }
+    else if (event.id == ui_sliderBrightness) {
+      brightness = event.value;
+      FastLED.setBrightness(brightness);
+    }
+    else if (event.id == ui_buttonColorWaves) {
+      currentPatternIndex = 0;
+    }
+    else if (event.id == ui_buttonRainbow) {
+      currentPatternIndex = 1;
+    }
+    else if (event.id == ui_buttonRainbowWithGlitter) {
+      currentPatternIndex = 2;
+    }
+    else if (event.id == ui_buttonConfetti) {
+      currentPatternIndex = 3;
+    }
+    else if (event.id == ui_buttonSinelon) {
+      currentPatternIndex = 4;
+    }
+    else if (event.id == ui_buttonJuggle) {
+      currentPatternIndex = 5;
+    }
+    else if (event.id == ui_buttonBeat) {
+      currentPatternIndex = 6;
+    }
+  }
+  else if (SimbleeForMobile.screen == 2) {
+    if (event.id == ui_buttonPattern) {
+      SimbleeForMobile.showScreen(1);
+    }
+    else if (event.id == ui_imageColorWheel) {
+      Serial.print("R,G,B: ");
+      Serial.print(event.red);
+      Serial.print(",");
+      Serial.print(event.green);
+      Serial.print(",");
+      Serial.println(event.blue);
+
+      solidColor.r = event.red;
+      solidColor.g = event.green;
+      solidColor.b = event.blue;
+      SimbleeForMobile.updateColor(ui_rectSwatch, rgb(solidColor.r, solidColor.g, solidColor.b));
+    }
+  }
 }
 
