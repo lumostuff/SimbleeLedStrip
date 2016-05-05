@@ -37,7 +37,7 @@ SimplePatternList patterns = {
   off,
 };
 
-uint8_t currentPatternIndex = 1;
+uint8_t currentPatternIndex = 0;
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 uint8_t patternCount = ARRAY_SIZE(patterns);
 
@@ -273,6 +273,7 @@ void patternSelectorScreen() {
   y += height / 2;
   width = SimbleeForMobile.screenWidth - margin * 2;
   ui_sliderBrightness = SimbleeForMobile.drawSlider(margin, y, width, 0, 255);
+  SimbleeForMobile.setEvents(ui_sliderBrightness, EVENT_DRAG | EVENT_RELEASE);
   SimbleeForMobile.updateValue(ui_sliderBrightness, brightness);
 
   SimbleeForMobile.endScreen();
