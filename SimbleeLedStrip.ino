@@ -8,7 +8,7 @@
 #define CLOCK_PIN   4
 #define LED_TYPE    APA102
 #define COLOR_ORDER GBR // RGB
-#define NUM_LEDS    16
+#define NUM_LEDS    14
 
 // ten seconds per color palette makes a good demo
 // 20-120 is better for deployment
@@ -27,6 +27,7 @@ typedef void (*SimplePatternList[])();
 
 SimplePatternList patterns = {
   colorwaves,
+  lightning,
   rainbow,
   rainbowWithGlitter,
   confetti,
@@ -53,6 +54,7 @@ CRGBPalette16 targetPalette(gradientPalettes[0]);
 uint8_t ui_buttonOff;
 uint8_t ui_buttonColor;
 uint8_t ui_buttonColorWaves;
+uint8_t ui_buttonLightning;
 uint8_t ui_buttonRainbow;
 uint8_t ui_buttonRainbowWithGlitter;
 uint8_t ui_buttonConfetti;
@@ -162,6 +164,59 @@ void colorwaves() {
   }
 }
 
+// Based on Lightning2014 by Daniel Wilson, 2014
+// https://github.com/fibonacci162/LEDs
+void lightning() {
+  // The first "flash" in a bolt of lightning is the "leader." The leader
+  // is usually duller and has a longer delay until the next flash. Subsequent
+  // flashes, the "strokes," are brighter and happen at shorter intervals.
+
+  const uint8_t frequency = 50; // controls the interval between strikes
+  const uint8_t flashes = 8;    // the upper limit of flashes per strike
+
+  static uint8_t dimmer = 1;
+  static uint8_t flashCount = flashes;
+  static uint8_t flashCounter = 0;
+
+  static uint32_t delayMillis = 0;
+  static uint32_t delayStart = 0;
+
+  static bool flashing = true;
+
+  // bail, if we haven't waited long enough
+  if (millis() < delayMillis + delayStart)
+    return;
+
+  flashing = !flashing;
+  
+  if (flashCounter >= flashCount) // if we've finished the current set of flashes, clear the display and wait a bit
+  {
+    flashCounter = 0;
+    fill_solid(leds, NUM_LEDS, CRGB::Black); // clear the display
+    delayMillis = random8(frequency) * 100;
+    delayStart = millis();
+    return;
+  }
+
+  if (flashCounter == 0) dimmer = 5; // the brightness of the leader is scaled down by a factor of 5
+  else dimmer = random8(1, 3);      // return strokes are brighter than the leader
+
+  if(flashing)
+  {
+    fill_solid(leds, NUM_LEDS, CHSV(255, 0, 255 / dimmer));
+    delayMillis = random8(4, 10);
+    delayStart = millis();
+  }
+  else
+  {
+    fill_solid(leds, NUM_LEDS, CRGB::Black); // clear the display
+    delayMillis = 50 + random8(100);
+    if(flashCount == 0) delayMillis += 150; // longer delay until next flash after the leader
+  }
+
+  flashCounter++;
+}
+
 // patterns from DemoReel100 FastLED example: https://github.com/FastLED/FastLED/blob/master/examples/DemoReel100/DemoReel100.ino
 
 void rainbow() {
@@ -195,7 +250,7 @@ void sinelon() {
   // back and forth, with
   // fading trails
   fadeToBlackBy(leds, NUM_LEDS, 20);
-  int pos = beatsin16(13, 0, NUM_LEDS);
+  int pos = beatsin16(13, 0, NUM_LEDS - 1);
   static int prevpos = 0;
   if ( pos < prevpos ) {
     fill_solid(leds + pos, (prevpos - pos) + 1, CHSV(hue, 220, 255));
@@ -241,19 +296,19 @@ void patternSelectorScreen() {
 
   y += height;
   ui_buttonColorWaves         = SimbleeForMobile.drawButton(margin, y, width, "ColorWaves");
-  ui_buttonRainbow            = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Rainbow");
+  ui_buttonLightning          = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Lightning");
+  
+  y += height;
+  ui_buttonRainbow            = SimbleeForMobile.drawButton(margin, y, width, "Rainbow");
+  ui_buttonRainbowWithGlitter = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Rainbow w Glitter");
 
   y += height;
-  ui_buttonRainbowWithGlitter = SimbleeForMobile.drawButton(margin, y, width, "Rainbow w Glitter");
-  ui_buttonConfetti           = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Confetti");
+  ui_buttonConfetti           = SimbleeForMobile.drawButton(margin, y, width, "Confetti");
+  ui_buttonSinelon            = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Sinelon");
 
   y += height;
-  ui_buttonSinelon            = SimbleeForMobile.drawButton(margin, y, width, "Sinelon");
-  ui_buttonJuggle             = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Juggle");
-
-  y += height;
-  ui_buttonBeat               = SimbleeForMobile.drawButton(margin, y, width, "Beat");
-  SimbleeForMobile.drawButton(margin * 2 + width, y, width, "");
+  ui_buttonJuggle             = SimbleeForMobile.drawButton(margin, y, width, "Juggle");
+  ui_buttonBeat               = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Beat");
 
   y += height;
   SimbleeForMobile.drawButton(margin, y, width, "");
@@ -294,7 +349,7 @@ void colorSelectorScreen() {
 
   width = SimbleeForMobile.screenWidth;
   width -= margin * 2;
-  
+
   // border
   SimbleeForMobile.drawRect(margin, 120, width, height, BLACK);
   ui_rectSwatch = SimbleeForMobile.drawRect(margin + 1, 121, width - 2, height - 2, WHITE);
@@ -336,23 +391,26 @@ void ui_event(event_t &event) {
     else if (event.id == ui_buttonColorWaves) {
       currentPatternIndex = 0;
     }
-    else if (event.id == ui_buttonRainbow) {
+    else if (event.id == ui_buttonLightning) {
       currentPatternIndex = 1;
     }
-    else if (event.id == ui_buttonRainbowWithGlitter) {
+    else if (event.id == ui_buttonRainbow) {
       currentPatternIndex = 2;
     }
-    else if (event.id == ui_buttonConfetti) {
+    else if (event.id == ui_buttonRainbowWithGlitter) {
       currentPatternIndex = 3;
     }
-    else if (event.id == ui_buttonSinelon) {
+    else if (event.id == ui_buttonConfetti) {
       currentPatternIndex = 4;
     }
-    else if (event.id == ui_buttonJuggle) {
+    else if (event.id == ui_buttonSinelon) {
       currentPatternIndex = 5;
     }
-    else if (event.id == ui_buttonBeat) {
+    else if (event.id == ui_buttonJuggle) {
       currentPatternIndex = 6;
+    }
+    else if (event.id == ui_buttonBeat) {
+      currentPatternIndex = 7;
     }
   }
   else if (SimbleeForMobile.screen == 2) {
