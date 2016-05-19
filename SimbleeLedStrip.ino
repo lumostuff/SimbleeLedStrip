@@ -1,5 +1,3 @@
-#define FASTLED_FORCE_SOFTWARE_SPI
-
 #include <SimbleeForMobile.h>
 #include <FastLED.h>
 #include "GradientPalettes.h"
@@ -78,7 +76,7 @@ void setup() {
   SimbleeForMobile.begin();
 
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS);
-  FastLED.setCorrection(TypicalLEDStrip);
+  //  FastLED.setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(brightness);
 }
 
@@ -188,7 +186,7 @@ void lightning() {
     return;
 
   flashing = !flashing;
-  
+
   if (flashCounter >= flashCount) // if we've finished the current set of flashes, clear the display and wait a bit
   {
     flashCounter = 0;
@@ -201,7 +199,7 @@ void lightning() {
   if (flashCounter == 0) dimmer = 5; // the brightness of the leader is scaled down by a factor of 5
   else dimmer = random8(1, 3);      // return strokes are brighter than the leader
 
-  if(flashing)
+  if (flashing)
   {
     fill_solid(leds, NUM_LEDS, CHSV(255, 0, 255 / dimmer));
     delayMillis = random8(4, 10);
@@ -211,7 +209,7 @@ void lightning() {
   {
     fill_solid(leds, NUM_LEDS, CRGB::Black); // clear the display
     delayMillis = 50 + random8(100);
-    if(flashCount == 0) delayMillis += 150; // longer delay until next flash after the leader
+    if (flashCount == 0) delayMillis += 150; // longer delay until next flash after the leader
   }
 
   flashCounter++;
@@ -297,7 +295,7 @@ void patternSelectorScreen() {
   y += height;
   ui_buttonColorWaves         = SimbleeForMobile.drawButton(margin, y, width, "ColorWaves");
   ui_buttonLightning          = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Lightning");
-  
+
   y += height;
   ui_buttonRainbow            = SimbleeForMobile.drawButton(margin, y, width, "Rainbow");
   ui_buttonRainbowWithGlitter = SimbleeForMobile.drawButton(margin * 2 + width, y, width, "Rainbow w Glitter");

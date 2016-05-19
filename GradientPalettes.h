@@ -527,7 +527,7 @@ const TProgmemRGBGradientPalettePtr gradientPalettes[] = {
   rainbowsherbet_gp,
   gr65_hult_gp,
   gr64_hult_gp,
-  GMT_drywet_gp,
+//  GMT_drywet_gp,
   ib_jul01_gp,
   es_vintage_57_gp,
   ib15_gp,
