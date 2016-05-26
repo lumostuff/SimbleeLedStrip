@@ -1,3 +1,21 @@
+/*
+ * SimbleeLedStrip: https://github.com/lumostuff/SimbleeLedStrip
+ * Copyright (C) 2016 Jon Richings & Jason Coon, LumoStuff
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <SimbleeForMobile.h>
 #include <FastLED.h>
 #include "GradientPalettes.h"
@@ -6,7 +24,7 @@
 #define CLOCK_PIN   4
 #define LED_TYPE    APA102
 #define COLOR_ORDER GBR // RGB
-#define NUM_LEDS    14
+#define NUM_LEDS    256
 
 // ten seconds per color palette makes a good demo
 // 20-120 is better for deployment
@@ -76,8 +94,9 @@ void setup() {
   SimbleeForMobile.begin();
 
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS);
-  //  FastLED.setCorrection(TypicalLEDStrip);
+  FastLED.setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(brightness);
+  FastLED.setDither(0);
 }
 
 void loop() {
@@ -277,6 +296,8 @@ void juggle() {
     dothue += 32;
   }
 }
+
+// Simblee UI
 
 void patternSelectorScreen() {
   SimbleeForMobile.beginScreen(WHITE);
