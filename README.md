@@ -1,3 +1,3 @@
-# APA102 LED Strip control via Bluetooth LE via Simblee
+# APA102 LED strip control via Bluetooth LE via Simblee
 
 [Simblee](https://www.simblee.com)
