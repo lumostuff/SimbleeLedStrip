@@ -38,6 +38,17 @@ uint8_t brightness = 32;
 
 CRGB solidColor = CRGB(0, 0, 255);
 
+void colorwaves();
+void lightning();
+void rainbow();
+void rainbowWithGlitter();
+void confetti();
+void sinelon();
+void juggle();
+void bpm();
+void showSolidColor();
+void off();
+
 // List of patterns to cycle through. Each is defined as a separate function below.
 typedef void (*SimplePatternList[])();
 
